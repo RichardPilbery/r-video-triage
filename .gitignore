@@ -41,3 +41,6 @@ vignettes/*.pdf
 data/*
 
 private/*
+
+r-video-triage_files/*
+r-video-triage_analysis/*

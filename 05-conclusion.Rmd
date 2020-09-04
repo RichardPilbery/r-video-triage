@@ -1,2 +1,22 @@
-# Conclusion
+# Conclusion {-}
 The conclusion
+
+
+## Acknoledgements {-}
+sadfasdf
+
+## Contributors {-}
+
+Conceived and designed evaluation, who did the analysis, 
+
+All authors drafted the manuscript and contributed substantially to its revision.
+
+## Funding {-}
+
+sadfasdfs
+
+## Data sharing {-}
+
+???
+
+

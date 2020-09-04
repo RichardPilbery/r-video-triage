@@ -1,2 +1,42 @@
 # Methods
-Methods blurb
+
+Brief overview blurb
+
+## Setting
+
+Bit about setting up of the pilot. GoodSam vs Accurix
+Clinicians calling patients back etc.
+Bit about the clinicians themselves ? only shielding
+Would be nice to have some demographic data on the paramedics taking part perhaps?
+
+## Data sources
+
+All video consultations offered and undertaken between 4th May 2020 and at least 26th August 2020 following a 999 emergency call were recorded by the clinician on a bespoke spreadsheet. Incident numbers from video calls undertaken after 27th March were recorded on a separate spreadsheet, and were used to understand patterns of use and volume of video consultations undertaken. Patients under the age of 16 were assessed with the consent of their parent or guardian, and consultations included in the evaluation. 
+
+Clinician collected experience data included the following variables:
+
+## Study variables
+
++  Incident ID
++  Video triage platform
++  Initial call code (in AMPDS or NHS Pathways category)
++  The following fields will be entered by the clinician, using a dropdown Likert scale
++  If the consultation was refused or was not able to be carried out due to technical failure
++  Patient disposition	
++  If the technology was accessible for the patient	
++  Whether the video supported a more thorough assessment of patient needs (compared to telephone +  ne) 	
++  Whether the video supported more informed clinical decision making (compared to telephone alone) 	+  Whether the patient demonstrated confidence in care plan	
++  Whether the video supported improved holistic patient care (physical, social and emotional needs) +  mpared to telephone alone) 	
++  Any positive or negative comments 
+
+Patient experience measures were collected via postal survey which was sent to all  111 and 999 patients (or their parent / guardian(s) that participated in the video call) who agreed to be contacted (Supplementary 1).
+
+To determine the 24-hour re-contact rate, data were collected from the YAS 999 Computer Aided Dispatch (CAD) system for all ‘hear and treat’ calls and for those that were offered and received video consultation.
+
+
+## Statistical methods
+
+Sample size calculation not appropriate for a service evaluation.
+
+Baseline data and objectives
+Descriptive, Sankey etc.

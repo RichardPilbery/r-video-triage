@@ -1,4 +1,34 @@
 # Introduction {#intro}
 
-Intro blurb
+
+The emergence of Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) in China in late 2019, and subsequent global spread has resulted in a pandemic of coronavirus disease (COVID-19). The COVID-19 pandemic has brought challenges to the delivery of urgent and emergency care to the patients of Yorkshire. The key challenges for Yorkshire Ambulance Service (YAS) relate to:
+
+-	Staff deemed to be high risk were advised to self-isolate for 12 weeks, reducing the available workforce in the emergency operations centre (EOC), Integrated and Urgent Care (IUC) contact centre and as frontline ambulance crews
+-	Predicted increases in sickness and absence through COVID-19 related ill-health and close contact quarantine reducing the available workforce in the EOC and on frontline ambulances
+-	Increased demand on 111 and 999 services due to COVID-19 morbidity.
+-	Supporting patients to access the most appropriate services first time at a time of high demand across the system.
+
+In order to continue to provide a high quality service, a number of mitigating actions have been undertaken, including the development of a video triage system for both 111 and 999 calls. In the EOC, which handles the 999 calls, members of the Senior Clinical Support Cell (HCPC-registered paramedic or NMC-registered nurse at minimum), as well as paramedics who are working from home due to shielding, are able to identify calls from the stack of calls awaiting allocation of a response which they determine may benefit from video triage’. The patient is then called by telephone for initial triage and if found to be suitable, they are asked if they are willing and able to engage with the video technology (GoodSAM or ACCuRX) and a video consultation can be set up. If the patient does not have the capability or does not consent to video consultation, a telephone triage is completed by the clinician. 
+
+In the IUC contact centre the process is very similar, with a number of key clinicians able to offer video triage in addition to telephone triage when it is felt to be of benefit to the assessment of a patient’s condition and care planning. A number of key reasons for calling are excluded from the pilot (mental health, sexual health enquiries, frequent caller cases, anyone who had a Special Patient Note or patients that were in an obviously public space). 
+
+The aim of this evaluation was to determine the impact of video triage on patient and staff acceptability, assurance of safety of process, and the development of ideas to support sustained used of service post-pandemic. 
+
+## Aims and Objectives
+
+### Aim
+
+We aimed to understand the acceptability and experiences of staff and patients using video triage for urgent and emergency care patients in one UK NHS Ambulance Trust.  
+
+### Objectives
+
+Our specific objectives were:
+
+1.	To understand the experience of patients who receive video triage as part of an episode of care arising from a 999 call.
+2.	To understand the experience of ambulance staff who are involved in a patient care episode which used video triage following a 999 call.
+3.	To understand the outcomes of patients who are offered video triage as determined by:
+    a.	The number of patients who are offered a video consultation but refuse or do not have the technical capability
+    b.	The proportion of 999 calls that are closed as ‘hear and treat’ with and without video triage
+    c.	A comparison of 999 24 hour re-contact rates for video and non-video triaged calls that are closed with ‘hear and treat’ advice
+
 

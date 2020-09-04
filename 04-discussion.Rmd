@@ -1,2 +1,10 @@
 # Discussion
 Discussion blurb
+
+
+## Limitations
+
+Service evaluation, no matched cases / not an RCT
+Relying on clinicians to document cases particularly failures
+Issue with identifying patients who recall 999
+
