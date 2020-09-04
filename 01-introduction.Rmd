@@ -1,4 +1,4 @@
-# Introduction {#intro}
+# Introduction {-}
 
 
 The emergence of Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) in China in late 2019, and subsequent global spread has resulted in a pandemic of coronavirus disease (COVID-19). The COVID-19 pandemic has brought challenges to the delivery of urgent and emergency care to the patients of Yorkshire. The key challenges for Yorkshire Ambulance Service (YAS) relate to:
