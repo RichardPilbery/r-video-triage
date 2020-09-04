@@ -11,9 +11,13 @@ Would be nice to have some demographic data on the paramedics taking part perhap
 
 ## Data sources
 
+** Earliest drop-down Likert question response is from 9th May. Might need to highlight this perhaps**
+
 All video consultations offered and undertaken between 4th May 2020 and at least 26th August 2020 following a 999 emergency call were recorded by the clinician on a bespoke spreadsheet. Incident numbers from video calls undertaken after 27th March were recorded on a separate spreadsheet, and were used to understand patterns of use and volume of video consultations undertaken. Patients under the age of 16 were assessed with the consent of their parent or guardian, and consultations included in the evaluation. 
 
-Clinician collected experience data included the following variables:
+**Need to incude something about analysis of free-text fields**
+
+Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.
 
 ## Study variables
 
@@ -32,6 +36,7 @@ Clinician collected experience data included the following variables:
 Patient experience measures were collected via postal survey which was sent to all  111 and 999 patients (or their parent / guardian(s) that participated in the video call) who agreed to be contacted (Supplementary 1).
 
 To determine the 24-hour re-contact rate, data were collected from the YAS 999 Computer Aided Dispatch (CAD) system for all ‘hear and treat’ calls and for those that were offered and received video consultation.
+
 
 
 ## Statistical methods

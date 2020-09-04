@@ -1,12 +1,169 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Results {-}
 
 ```{r results, echo=F, message=F, warning=F}
   # Use pandoc for Word documents
   format="html"
 
-  library(tidyverse)
-  library(knitr)
+knitr::opts_chunk$set(echo = F, message = F, warning = F, cache = F, fig.align = 'center', out.width = '90%', fig.width = 10)
+
+# https://stackoverflow.com/questions/14733732/cant-change-fonts-in-ggplot-geom-text
+#windowsFonts(Times=windowsFont("TT Arial"))
+
+library(tidyverse)
+library(lubridate)
+library(tableone)
+library(readxl)
+library(yardstick)
+
+ampds_df <- data.frame(
+  code = c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"),
+  code_num = seq(1, 37, 1),
+  code_text = c("Abdominal pain/problems", "Allergies", "Animal bites/attacks", "Assault", "Back pain", "Breathing problems", "Burns", "Carbon monoxide/Inhalation/HAZMAT/CBRN", "Cardiac or respiratory arrest/death", "Chest pain", "Choking", "Covulsions/fitting", "Diabetic problems", "Drowning", "Electrocution", "Eye problems", "Falls", "Headache", "Heart problems", "Heat/cold exposure", "Haemorrhage/lacerations", "Inaccessible incident", "Overdose/poisoning", "Pregnancy/Childbirth/Miscarriage", "Psychiatric", "Sick person", "Stab/gunshot/penetrating trauma", "Stroke/TIA", "Traffic incident", "Traumatic injuries", "Unconscious", "Unknown problem", "Transfer", "ACN", "Health Care Professional Admission", "Pandemic", "Interfacility"),
+  stringsAsFactors = F
+)
+
+df <- readRDS('data/df-final.rds')
+
+df1 <- df %>%
+  filter(
+    TimeCallCommenced >= ymd('2020-03-16'),
+    TimeCallCommenced <= ymd('2020-08-26')            
+  ) %>%
+  left_join(ampds_df, by=c("ampds_cc"="code")) %>%
+  mutate(
+    vt_isoweek = isoweek(TimeCallCommenced),
+    month = month(TimeCallCommenced, label = T, abbr = T),
+    advisor_id = factor(advisor_id),
+    week_comm = as.Date(floor_date(TimeCallCommenced, unit = "week", week_start = 1)),
+    ampds_top = fct_lump(code_text, n = 14),
+    video = ifelse(is.na(video), "unknown", video),
+    `video call conducted?` = factor(case_when(
+      is.na(unable) ~ "yes",
+      tolower(unable) == "strongly disagree" ~ "unknown",
+      TRUE ~ paste0("no: ",tolower(unable)))
+    ),
+    tech_issue = ifelse(is.na(tech_iss) | `video call conducted?` != "yes", "No", "Yes"),
+    cat = ifelse(cat == 0, NA, cat),
+    GovtStdTOC = str_sub(GovtStdTOC, 4,4)
+  ) %>%
+  rename(
+    `original call category` = cat,
+    `final call category` = GovtStdTOC,
+    `technical issue during call?` = tech_issue,
+    `AMPDS chief complaint` = ampds_top,
+    `call outcome` = call_outcome
+  )
+
+df1 %>%
+  select(video, `call outcome`, `original call category`, `final call category`, `AMPDS chief complaint`, `video call conducted?`, `technical issue during call?`) %>% saveRDS('data/sankey_df.rds')
+
+
+summary_table <- CreateTableOne(
+  vars = c("month", "CBU","original call category", "final call category", "age", "sex", "video call conducted?", "technical issue during call?", "AMPDS chief complaint", "call outcome"),
+  strata = "video",
+  data = df1, 
+  test = F,
+  factorVars = c("CBU", "technical issue during call?", "original call category", "final call category", "AMPDS chief complaint", "sex", "month", "video call conducted?", "call outcome"),
+  addOverall = T,
+  includeNA = T
+)
+
 
 
 ```
 
+## Summary of patient responses
+
+```{r pt-responses}
+
+library(likert)
+
+createPlot <- function(dataframe,thelegend=FALSE, wrapwidth=40) {
+  
+  dataframe = as.data.frame(dataframe)
+  
+  leg = c(1000,1000)
+  if(thelegend == TRUE) {
+    leg = "bottom"
+  }
+  plot <- plot(likert(dataframe), type="bar", wrap=wrapwidth, include.center=T, plot.percents=F,plot.percent.low=T, plot.percent.high=T, plot.percent.neutral=T, legend.position=leg, colors=c('#CC0016','#F6A57F','#DFDFDF','#90C5DF','#0070B2')) 
+  return(plot)
+}
+
+responses <- tolower(c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))
+ 
+ qns <- c("It was easy to get the video call to work", "My reason for calling was appropriate to be assess by video call", "The clinician I spoke with on the video call had a professional manner", "The clinician I spoke with supported me to use the video call technology", "Compared to telephone alone, the video call allowed me to express all my needs in a better way", "I was happy with the plan agreeed at the end of the video call", "Overall, I was satisfied with the video call")
+
+pt_df <- read_xlsx('data/Video-Triage-Patient-Responses.xlsx') %>%
+  select(q1:q7) %>%
+  mutate_all(tolower) %>%
+  filter_all(all_vars(. %in% responses)) %>%
+  mutate_all(~ordered(.,levels = responses))
+
+colnames(pt_df) <- qns
+
+ 
+```
+
+Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.`r nrow(pt_df)`/ 201 (`r round((nrow(pt_df)/201)*100,1)`%) were returned prior to the evaluation closing (Figure \@ref(fig:pt-likert-plot)).
+ 
+```{r pt-likert-plot, fig.cap="Figure 4: Patient responses to video triage call survey"}
+
+createPlot(pt_df)
+
+```
+
+## Summary of clinician data
+
+Between `r format(min(df1$TimeCallCommenced), "%d %B %Y")` and `r format(max(df1$TimeCallCommenced), "%d %B %Y")`, clinicians documented `r nrow(df1)` triage calls. A video call was attempted in `r df1 %>% filter(is.na(unable)) %>% count() %>% pull(n)` (`r round((df1 %>% filter(is.na(unable)) %>% count() %>% pull(n)/nrow(df1))*100,1)`%) of cases (Table 1).
+
+```{r }
+
+kableone(print(summary_table, showAllLevels = T), caption = "Table 1: Triage calls undertaken by clinicians")
+
+```
+
+
+
+```{r calls-per-week, fig.cap = "Figure 1: Calls per week, stratified by video call conducted"}
+
+df1 %>%
+  count(week_comm, `video call conducted?`) %>%
+  na.omit() %>%
+  ggplot(aes(x = week_comm, y = n, fill = `video call conducted?`)) +
+  geom_col(colour = "black", size = 0.1, show.legend = T) +
+  theme_minimal() +
+  scale_fill_viridis_d(option = "D") + 
+  scale_x_date(name = "Week Commencing", date_breaks = "1 week", expand = c(0,0)) +
+  scale_y_continuous(name = "Number of calls", breaks = seq(0, 150, 10), labels = seq(0, 150, 10), expand = c(0,0)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10), axis.title.x = element_text(vjust = -2), plot.margin = unit(c(1,1,1,1), "cm"))
+
+```
+
+
+
+```{r fig-likert-clinician, fig.cap="Figure 3: Likert responses by clinicians relating to video triage call"}
+
+likert_names <- c("The technology was accessible for the patient", "Video triage enable me to make a more thorough assessment of patient needs compared to telephone alone", "Video triage enabled me to make more informed clinical decision making compared to telephone alone", "The patient had confidence in the care plan", "Video triage supported improved holistic patient care (physical, social and emotional needs) compared to telephone alone")
+
+df_likert <- df1 %>%
+  mutate_all(tolower) %>%
+  select(tech_accessible, thorough_assess, informed_decision, pt_confidence, holistic_care) %>%
+  filter_all(all_vars(. %in% responses)) %>%
+  mutate_all(as.factor) %>%
+  mutate(
+    pt_confidence = ordered(pt_confidence, levels = responses)
+  )
+
+colnames(df_likert) <- likert_names
+  
+
+createPlot(df_likert)
+
+
+```
