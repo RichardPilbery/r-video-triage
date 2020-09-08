@@ -3,7 +3,9 @@ The conclusion
 
 
 ## Acknoledgements {-}
-sadfasdf
+
+This work uses data provided by patients and collected by the NHS as part of their care and support. The authors would
+also like to thank the clinicians of Yorkshire Ambulance service who participated in the pilot and provided additional data to support this evaluation.
 
 ## Contributors {-}
 
@@ -13,9 +15,9 @@ All authors drafted the manuscript and contributed substantially to its revision
 
 ## Funding {-}
 
-sadfasdfs
+??
 
-## Data sharing {-}
+## Data sharing statement {-}
 
 ???
 

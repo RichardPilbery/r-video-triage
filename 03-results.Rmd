@@ -7,7 +7,7 @@ editor_options:
 
 ```{r results, echo=F, message=F, warning=F}
   # Use pandoc for Word documents
-  format="html"
+  format="pandoc"
 
 knitr::opts_chunk$set(echo = F, message = F, warning = F, cache = F, fig.align = 'center', out.width = '90%', fig.width = 10)
 
@@ -31,7 +31,7 @@ df <- readRDS('data/df-final.rds')
 
 df1 <- df %>%
   filter(
-    TimeCallCommenced >= ymd('2020-03-16'),
+    TimeCallCommenced >= ymd('2020-03-26'),
     TimeCallCommenced <= ymd('2020-08-26')            
   ) %>%
   left_join(ampds_df, by=c("ampds_cc"="code")) %>%
@@ -52,15 +52,15 @@ df1 <- df %>%
     GovtStdTOC = str_sub(GovtStdTOC, 4,4)
   ) %>%
   rename(
-    `original call category` = cat,
-    `final call category` = GovtStdTOC,
+    `initial triage category` = cat,
+    `final triage category` = GovtStdTOC,
     `technical issue during call?` = tech_issue,
     `AMPDS chief complaint` = ampds_top,
     `call outcome` = call_outcome
   )
 
 df1 %>%
-  select(video, `call outcome`, `original call category`, `final call category`, `AMPDS chief complaint`, `video call conducted?`, `technical issue during call?`) %>% saveRDS('data/sankey_df.rds')
+  select(video, `call outcome`, `initial triage category`, `final triage category`, `AMPDS chief complaint`, `video call conducted?`, `technical issue during call?`) %>% saveRDS('data/sankey_df.rds')
 
 
 summary_table <- CreateTableOne(
@@ -107,10 +107,58 @@ pt_df <- read_xlsx('data/Video-Triage-Patient-Responses.xlsx') %>%
 
 colnames(pt_df) <- qns
 
+Qn8 <- read_xlsx('data/Video-Triage-Patient-Responses.xlsx') %>%
+  select(q8)
+
+#q8_respond <- Qn8 %>% count(!is.na(q8)) %>% filter(`!is.na(q8)` == TRUE) %>% pull(n)
+q8_respond <- Qn8 %>% summarise(n = n(), resp = sum(!is.na(q8)))
+prop_respond <- round((q8_respond$resp/q8_respond$n)*100,1)
+
+# Create summary table of results
+
+pt_summary_df <- read_xlsx('data/Video-Triage-Patient-Responses.xlsx') %>%
+  select(q1:q7) %>%
+    mutate_all(tolower) %>%
+    pivot_longer(cols = q1:q7, names_to = "question", values_to = "response") %>%
+    group_by(question) %>%
+    summarise(
+      `strongly agree` = sum(response == "strongly agree", na.rm = T),
+      `agree` = sum(response == "agree", na.rm = T),
+      `neutral` = sum(response == "neutral", na.rm = T),
+      `disagree` = sum(response == "disagree", na.rm = T),
+      `strongly disagree` = sum(response == "strongly disagree", na.rm = T),
+      `no response` = sum(is.na(response))
+    )
+
+columns = colnames(pt_summary_df)[-1]
+pt_summary_df$total = rowSums(pt_summary_df[,columns])
+
+# Insert actual questions
+pt_summary_df$question = qns
+  
+
  
 ```
 
-Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.`r nrow(pt_df)`/ 201 (`r round((nrow(pt_df)/201)*100,1)`%) were returned prior to the evaluation closing (Figure \@ref(fig:pt-likert-plot)).
+Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.`r nrow(pt_df)`/201 (`r round((nrow(pt_df)/201)*100,1)`%) were returned prior to the evaluation closing (Figure \@ref(fig:pt-likert-plot), Supplementary 3). In addition to the specific likert questions, there was an opportunity for respondents to enter a free-text comment, which was utilised in `r q8_respond$resp`/`r q8_respond$n` (`r prop_respond`%) of cases. The majority of comments praised the clinicians involved in their care, both over the phone and in person:
+
+>"The lady I spoke to was extremely helpful and professional. I really appreciate the help she gave me regarding my six year old son. Many thanks. Second to none service."
+
+>"The ambulance staff were absolute first class, cannot fault them in any way, a credit to the service." 
+
+Another common thread related to the benefits of video calling over telephone-only triage, for example:
+
+>"Thank you. It was a very helpful call in an emergency situation and was more reassuring than a telephone call." 
+
+>"Although my technology skills are mid-range at best, I found the video call easy to manage. It also allowed the person dealing with my problem to see exactly what difficulties I was experiencing and to deal with them in the most appropriate way."
+
+However, four respondents highlighted technical issues with the video triage service:
+
+>"Only issue was connection / signal, very hard to hear clearly. The staff were faultless." 
+
+>"The video kep freezing and the sound was very bad so the call did not achieve anything. So was not a satisafctory outcome."
+
+
  
 ```{r pt-likert-plot, fig.cap="Figure 4: Patient responses to video triage call survey"}
 
@@ -124,13 +172,13 @@ Between `r format(min(df1$TimeCallCommenced), "%d %B %Y")` and `r format(max(df1
 
 ```{r }
 
-kableone(print(summary_table, showAllLevels = T), caption = "Table 1: Triage calls undertaken by clinicians")
+kableone(print(summary_table, showAllLevels = T), caption = "Triage calls undertaken by clinicians")
 
 ```
 
 
 
-```{r calls-per-week, fig.cap = "Figure 1: Calls per week, stratified by video call conducted"}
+```{r calls-per-week, fig.cap = "Calls per week, stratified by video call conducted"}
 
 df1 %>%
   count(week_comm, `video call conducted?`) %>%
@@ -147,9 +195,10 @@ df1 %>%
 
 
 
-```{r fig-likert-clinician, fig.cap="Figure 3: Likert responses by clinicians relating to video triage call"}
+```{r fig-likert-clinician, fig.cap="Likert responses by clinicians relating to video triage call"}
 
 likert_names <- c("The technology was accessible for the patient", "Video triage enable me to make a more thorough assessment of patient needs compared to telephone alone", "Video triage enabled me to make more informed clinical decision making compared to telephone alone", "The patient had confidence in the care plan", "Video triage supported improved holistic patient care (physical, social and emotional needs) compared to telephone alone")
+
 
 df_likert <- df1 %>%
   mutate_all(tolower) %>%
@@ -160,10 +209,42 @@ df_likert <- df1 %>%
     pt_confidence = ordered(pt_confidence, levels = responses)
   )
 
+
+# Create summary table of results
+
+cl_summary_df <- df1 %>%
+  mutate_all(tolower) %>%
+  select(tech_accessible, thorough_assess, informed_decision, pt_confidence, holistic_care) %>%
+  pivot_longer(cols = everything(), names_to = "question", values_to = "response") %>%
+  group_by(question) %>%
+  summarise(
+    `strongly agree` = sum(response == "strongly agree", na.rm = T),
+    `agree` = sum(response == "agree", na.rm = T),
+    `neutral` = sum(response == "neutral", na.rm = T),
+    `disagree` = sum(response == "disagree", na.rm = T),
+    `strongly disagree` = sum(response == "strongly disagree", na.rm = T),
+    `no response` = sum(is.na(response))
+  )
+
+columns = colnames(cl_summary_df)[-1]
+cl_summary_df$total = rowSums(cl_summary_df[,columns])
+
+# Insert actual questions
+cl_summary_df$question = likert_names
+
+
 colnames(df_likert) <- likert_names
   
 
 createPlot(df_likert)
 
+
+```
+
+The majority of calls selected for video triage by clinicians were intially triage as category 5. However, as Figure \@ref(fig:sankey) shows, over half of calls were categorised to a higher priority by the clinician after the video consultation.
+
+```{r sankey, fig.cap="Relationship of initial and final triage category and call outcome for successful video triage calls (Note: 188 cases did not have an initial triage category reported by the clinician and have been removed)"}
+
+  knitr::include_graphics('images/sankey.png')
 
 ```

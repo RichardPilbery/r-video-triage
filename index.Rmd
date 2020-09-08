@@ -19,6 +19,7 @@ header-includes:
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 
+
 ```
 `r if (!knitr:::is_html_output()) '
 # The title goes here
@@ -28,6 +29,10 @@ header-includes:
 '`
 
 ## Author information
+
+**Add additional authors**
+
+
 | **Richard Pilbery**
 | Research paramedic
 | Yorkshire Ambulance Service NHS Trust

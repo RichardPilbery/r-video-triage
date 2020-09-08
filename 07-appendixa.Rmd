@@ -1,3 +1,25 @@
 # Supplementary 1
 
+Clinician spreadsheet
+
+# Supplementary 2
+
 Patient survey
+
+# Supplementary 3
+
+Data tables
+
+```{r}
+
+knitr::kable(pt_summary_df, format = format, caption = "Likert responses from patient survey")
+
+```
+
+# Supplementary 4
+
+```{r}
+
+knitr::kable(cl_summary_df, format = format, caption = "Likert responses from clinicians")
+
+```

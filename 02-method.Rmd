@@ -1,47 +1,54 @@
 # Methods {-}
 
-Brief overview blurb
+Brief intro blurb
+
+This service evaluation....
+
+
 
 ## Setting
 
-Bit about setting up of the pilot. GoodSam vs Accurix
-Clinicians calling patients back etc.
+YAS provides 24-hour emergency and health care services for the county of Yorkshire in the north of England. The county has a population of approximately five million, spread over almost 6000 square miles of varied terrain, included isolated moors and dales, coastline and heavily populated urban areas. In 2018/19 YAS received more than 998,500 emergency calls and responded to 798,968 incidents by either sending clinicians to scene or by providing assessment and advice over the telephone.
+
+
+**Bit about setting up of the pilot. GoodSam vs Accurix**
+**Clinicians calling patients back**
+
+## Patients
+
+Calls eligible for video triage were restricted to adults aged 18 to 65 years that had been triaged as suitable for the clinical support desk stack **(???CAT 5 ONLY????)**. However, as the pilot continued, restrictions on calls were relaxed and extended to include cateogry 2 and 3 calls and include all age ranges. Patients under the age of 16 were assessed with the consent of their parent or guardian, and consultations included in the evaluation.
+
+## Clinicians
+
 Bit about the clinicians themselves ? only shielding
-Would be nice to have some demographic data on the paramedics taking part perhaps?
+Mean length of service perhaps?
+
+ 
 
 ## Data sources
 
-** Earliest drop-down Likert question response is from 9th May. Might need to highlight this perhaps**
+Video consultations commenced on the 23rd March, 2020 and information about the call were recorded by clinicians participating in the pilot. Data collection was further enhanced following the involvement of the local research and developement team, and additional data was recorded by clinicians with respect to video calling both for patient and clinician to determine acceptability and impact on the assessmnet process (Supplementary 1). This enhanced data collection commenced on the 9th May 2020 and continued until the end of the pilot.
 
-All video consultations offered and undertaken between 4th May 2020 and at least 26th August 2020 following a 999 emergency call were recorded by the clinician on a bespoke spreadsheet. Incident numbers from video calls undertaken after 27th March were recorded on a separate spreadsheet, and were used to understand patterns of use and volume of video consultations undertaken. Patients under the age of 16 were assessed with the consent of their parent or guardian, and consultations included in the evaluation. 
+To capture the patient experience, YAS research ambassadors were consulted on the creation of a brief postal survey (Supplementary 2), which was sent to recipients of a video consultation. Surveys were sent to patients between the 11th June and 13th August, 2020. 
 
-**Need to incude something about analysis of free-text fields**
-
-Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.
-
-## Study variables
-
-+  Incident ID
-+  Video triage platform
-+  Initial call code (in AMPDS or NHS Pathways category)
-+  The following fields will be entered by the clinician, using a dropdown Likert scale
-+  If the consultation was refused or was not able to be carried out due to technical failure
-+  Patient disposition	
-+  If the technology was accessible for the patient	
-+  Whether the video supported a more thorough assessment of patient needs (compared to telephone +  ne) 	
-+  Whether the video supported more informed clinical decision making (compared to telephone alone) 	+  Whether the patient demonstrated confidence in care plan	
-+  Whether the video supported improved holistic patient care (physical, social and emotional needs) +  mpared to telephone alone) 	
-+  Any positive or negative comments 
-
-Patient experience measures were collected via postal survey which was sent to all  111 and 999 patients (or their parent / guardian(s) that participated in the video call) who agreed to be contacted (Supplementary 1).
-
-To determine the 24-hour re-contact rate, data were collected from the YAS 999 Computer Aided Dispatch (CAD) system for all ‘hear and treat’ calls and for those that were offered and received video consultation.
-
+To determine the 24-hour re-contact rate, data were collected from the YAS 999 Computer Aided Dispatch (CAD) system for all ‘hear and treat’ calls and split into those that were offered and received video consultation and those that were not. A re-contact was said to have occured if a patient with the same NHS number, or same name, age, sex and incident location, called 999 in the 24-hours following on from the time of the first call.
 
 
 ## Statistical methods
 
-Sample size calculation not appropriate for a service evaluation.
+No formal sample was calculated for this service evaluation and the analysis plan was predominantly descriptive.
 
-Baseline data and objectives
-Descriptive, Sankey etc.
+### Patient experience
+
+The patient survey consists of 7 Likert-style questions which were presented as horizontal diverging stacked bar charts (a summary table of values is available in Supplementary 3). Survey respondents also had the option to make free text comments. These were stratified into broad themes and the most commonly recurring themes reported, with examples of each provided.
+
+Most questions were Likert-style with the additional of a free text comments section where patients could add more general comments. These were stratified into broad themes and the most commonly recurring themes reported.
+
+### Clinician experience
+The additional Likert-style questions which were added by the R&D team were analysed using horizontal diverging stacked bar charts (a summary table of values in available in Suplementary 4).
+
+### Clinician performance
+
+Descriptive statistics were used to report clinician call activity with simple counts and proportions stratified by video calling application (GoodSamApp or ACCuRx). A sankey diagram was utilised to demonstrate change in initial and final triage category, and final call outcome.
+
+The difference in recontact rates of category 5 calls between video-calls and YAS-wide performance were reported as proportions, as were the rates of category 5 calls resulting in a 'hear and treat' outcome.
