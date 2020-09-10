@@ -27,7 +27,13 @@ ampds_df <- data.frame(
   stringsAsFactors = F
 )
 
-df <- readRDS('data/df-final.rds')
+df <- readRDS('data/df-final2.rds')
+
+cc_df <- readRDS('data/ampds_callcat_lookup.rds') %>%
+  select(`Desp Code`, `Org Col`) %>%
+  mutate(
+    org_cat = stringr::str_extract(`Org Col`, "\\d")
+  ) %>% select(-`Org Col`)
 
 df1 <- df %>%
   filter(
@@ -57,22 +63,73 @@ df1 <- df %>%
     `technical issue during call?` = tech_issue,
     `AMPDS chief complaint` = ampds_top,
     `call outcome` = call_outcome
+  ) %>%
+  left_join(cc_df, by=c("DespatchCodeAtCSD" = "Desp Code")) %>%
+  mutate(
+    `initial triage category` = coalesce(`initial triage category`, org_cat)
   )
+
+#df1 %>% filter(`video call conducted?` == "yes", `initial triage category` == "5") %>% count(month)
 
 df1 %>%
   select(video, `call outcome`, `initial triage category`, `final triage category`, `AMPDS chief complaint`, `video call conducted?`, `technical issue during call?`) %>% saveRDS('data/sankey_df.rds')
 
 
 summary_table <- CreateTableOne(
-  vars = c("month", "CBU","original call category", "final call category", "age", "sex", "video call conducted?", "technical issue during call?", "AMPDS chief complaint", "call outcome"),
+  vars = c("month", "CBU","initial triage category", "final triage category", "age", "sex", "video call conducted?", "technical issue during call?", "AMPDS chief complaint", "call outcome"),
   strata = "video",
   data = df1, 
   test = F,
-  factorVars = c("CBU", "technical issue during call?", "original call category", "final call category", "AMPDS chief complaint", "sex", "month", "video call conducted?", "call outcome"),
+  factorVars = c("CBU", "technical issue during call?", "initial triage category", "final triage category", "AMPDS chief complaint", "sex", "month", "video call conducted?", "call outcome"),
   addOverall = T,
   includeNA = T
 )
 
+# Cat 5 analysis
+
+cat5_vc_df <- df1 %>%
+  filter(`initial triage category` == "5", 
+         `video call conducted?` == "yes"
+  ) %>%
+  mutate(
+    `clinician category` = 'video'
+  ) %>%
+  select(`final triage category`, `call outcome`,`clinician category`, TimeCallCommenced)
+
+
+cat5_df <- readRDS('data/df-final-csd.rds') %>% 
+  mutate(
+    `clinician category` = 'csd',
+    `final triage category` = cat,
+    `call outcome` = call_outcome
+  ) %>%
+  select(`final triage category`, `call outcome`,`clinician category`, TimeCallCommenced) %>%
+  bind_rows(cat5_vc_df)
+  
+  
+cat5_table <- CreateTableOne(
+  vars = c("final triage category", "call outcome"),
+  strata = "clinician category",
+  data = cat5_df, 
+  test = F,
+  factorVars = c("final triage category", "call outcome"),
+  addOverall = T,
+  includeNA = T
+)
+
+
+# Date included for monthly comparison
+
+cat5_df2 <- cat5_df %>%
+  mutate(
+    themonth = month(TimeCallCommenced, abbr = F, label = T)
+  ) %>%
+  group_by(`clinician category`, themonth) %>%
+  summarise(
+    n = n(),
+    prop_ht = sum(`call outcome` == "Hear and treat")/n,
+    prop_c5 = sum(`final triage category` == "5")/n
+  )
 
 
 ```
@@ -168,7 +225,7 @@ createPlot(pt_df)
 
 ## Summary of clinician data
 
-Between `r format(min(df1$TimeCallCommenced), "%d %B %Y")` and `r format(max(df1$TimeCallCommenced), "%d %B %Y")`, clinicians documented `r nrow(df1)` triage calls. A video call was attempted in `r df1 %>% filter(is.na(unable)) %>% count() %>% pull(n)` (`r round((df1 %>% filter(is.na(unable)) %>% count() %>% pull(n)/nrow(df1))*100,1)`%) of cases (Table 1).
+Between `r format(min(df1$TimeCallCommenced), "%d %B %Y")` and `r format(max(df1$TimeCallCommenced), "%d %B %Y")`, clinicians documented `r nrow(df1)` triage calls. A video call was conducted in `r df1 %>% filter(is.na(unable)) %>% count() %>% pull(n)` (`r round((df1 %>% filter(is.na(unable)) %>% count() %>% pull(n)/nrow(df1))*100,1)`%) of cases (Table 1).
 
 ```{r }
 
@@ -243,8 +300,37 @@ createPlot(df_likert)
 
 The majority of calls selected for video triage by clinicians were intially triage as category 5. However, as Figure \@ref(fig:sankey) shows, over half of calls were categorised to a higher priority by the clinician after the video consultation.
 
-```{r sankey, fig.cap="Relationship of initial and final triage category and call outcome for successful video triage calls (Note: 188 cases did not have an initial triage category reported by the clinician and have been removed)"}
+```{r sankey, fig.cap="Relationship of initial and final triage category and call outcome for successful video triage calls (Note: 51 cases did not have an initial triage category reported and have been removed)"}
 
   knitr::include_graphics('images/sankey.png')
+
+```
+
+An analysis of catgory 5 calls managed by the clinical support desk show that a higher proportion of calls that were intially triaged as category 5 remained so when a video triage was conducted. Similarly, a high proportion of calls had an outcome of 'hear and treat' compared to traditional telephone-only triage (Table \@ref(tab:cat-table) and Figure \@ref(fig:csd-vs-vc)).
+
+```{r cat-table}
+
+kableone(print(cat5_table, showAllLevels = T), caption = "Comparison of category 5 call outcome when managed by clinicians utilising video triage compared to regular telephone triage conducted by clinical support desk clinicians")
+
+```
+
+
+
+
+```{r csd-vs-vc, fig.cap="Comparison of clinical support desk and video triage category 5 calls"}
+
+  cat5_df2 %>%
+  pivot_longer(cols = c(prop_ht, prop_c5), names_to = "variable", values_to = "proportion") %>%
+  mutate(
+    variable = ifelse(variable == "prop_ht", "Proportion of hear and treat call outcome", "Proportion of calls with a final triage category of 5")
+  ) %>%
+  ggplot(aes(x = themonth, y = proportion, fill = `clinician category`)) +
+  geom_bar(stat = "identity", position="dodge") +
+  scale_fill_manual(values = c("#440154ff", "#238A8DFF")) + 
+  scale_y_continuous(name = "Proportion of calls", labels = scales::percent, breaks = seq(0,1,0.1)) +
+  theme_minimal() +
+  # 'pairlist' object cannot be coerced to type 'integer'
+  # Don't put a pipe put a +!!!!
+  facet_wrap(~variable)
 
 ```

@@ -31,7 +31,7 @@ Video consultations commenced on the 23rd March, 2020 and information about the 
 
 To capture the patient experience, YAS research ambassadors were consulted on the creation of a brief postal survey (Supplementary 2), which was sent to recipients of a video consultation. Surveys were sent to patients between the 11th June and 13th August, 2020. 
 
-To determine the 24-hour re-contact rate, data were collected from the YAS 999 Computer Aided Dispatch (CAD) system for all ‘hear and treat’ calls and split into those that were offered and received video consultation and those that were not. A re-contact was said to have occured if a patient with the same NHS number, or same name, age, sex and incident location, called 999 in the 24-hours following on from the time of the first call.
+To determine the 24-hour re-contact rate, data were collected from the YAS 999 Computer Aided Dispatch (CAD) system for all video triage calls and a comparison group consisting of call initially triaged as category 5 which were managed by the clinical support desk, since these calls could reasonably be assumed to have a disposition of ‘hear and treat'. A re-contact was said to have occured if a patient with the same NHS number, or same name, age, sex and incident location, called 999 in the 24-hours after the first call was recorded as being closed.
 
 
 ## Statistical methods
