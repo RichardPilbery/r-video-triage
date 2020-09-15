@@ -171,7 +171,7 @@ createPlot <- function(dataframe,thelegend=FALSE, wrapwidth=40) {
   
   dataframe = as.data.frame(dataframe)
   
-  plot <- plot(likert(dataframe), type="bar", wrap=wrapwidth, include.center=T, plot.percents=F,plot.percent.low=T, plot.percent.high=T, plot.percent.neutral=T, legend.position="bottom", colors=c('#CC0016','#F6A57F','#DFDFDF','#90C5DF','#0070B2')) 
+  plot <- plot(likert(dataframe), type="bar", wrap=wrapwidth, include.center=T, plot.percents=F,plot.percent.low=T, plot.percent.high=T, plot.percent.neutral=T, text.size = 5, legend.position="bottom", colors=c('#CC0016','#F6A57F','#DFDFDF','#90C5DF','#0070B2')) + theme(text=element_text(size = 20))
   return(plot)
 }
 
@@ -220,7 +220,7 @@ pt_summary_df$question = qns
  
 ```
 
-Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.`r nrow(pt_df)`/201 (`r round((nrow(pt_df)/201)*100,1)`%) were returned prior to the evaluation closing (Figure \@ref(fig:pt-likert-plot), Supplementary 3). In addition to the specific Likert questions, there was an opportunity for respondents to enter a free-text comment, which was utilised in `r q8_respond$resp`/`r q8_respond$n` (`r prop_respond`%) of cases. The majority of comments praised the clinicians involved in their care, both over the phone and in person:
+Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call. `r nrow(pt_df)`/201 (`r round((nrow(pt_df)/201)*100,1)`%) were returned prior to the evaluation closing (Figure \@ref(fig:pt-likert-plot), Supplementary 3). In addition to the specific Likert questions, there was an opportunity for respondents to enter a free-text comment, which was utilised in `r q8_respond$resp`/`r q8_respond$n` (`r prop_respond`%) of cases. The majority of comments praised the clinicians involved in their care, both over the phone and in person:
 
 >"The lady I spoke to was extremely helpful and professional. I really appreciate the help she gave me regarding my six year old son. Many thanks. Second to none service."
 
@@ -269,7 +269,7 @@ df1 %>%
   scale_fill_viridis_d(option = "D") + 
   scale_x_date(name = "Week Commencing", date_breaks = "1 week", expand = c(0,0)) +
   scale_y_continuous(name = "Number of calls", breaks = seq(0, 150, 10), labels = seq(0, 150, 10), expand = c(0,0)) +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10), axis.title.x = element_text(vjust = -2), plot.margin = unit(c(1,1,1,1), "cm"), legend.position = "bottom")
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 20), axis.title.x = element_text(vjust = -2), plot.margin = unit(c(1,1,1,1), "cm"), legend.position = "bottom")
 
 ```
 
