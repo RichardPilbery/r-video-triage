@@ -1,5 +1,5 @@
 --- 
-title: "The title"
+title: "The utility of video triage for patients and clinicians during the covid-19 pandemic: a service evaluation"
 author: "Richard Pilbery"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -31,6 +31,14 @@ header-includes:
 ## Author information
 
 **Add additional authors**
+
+| **Dr Fional Bell**
+| Acting head of research
+| Yorkshire Ambulance Service NHS Trust
+| Springhill, Brindley Way
+| Wakefield 41 Business Park
+| Wakefield
+| WF2 0XQ
 
 
 | **Richard Pilbery**

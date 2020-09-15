@@ -1,7 +1,16 @@
 # Introduction {-}
 
 
-The emergence of severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) in China in late 2019, and subsequent global spread has resulted in a pandemic of coronavirus disease (COVID-19). The COVID-19 pandemic has brought challenges to the delivery of urgent and emergency care to the patients of Yorkshire. The key challenges for Yorkshire Ambulance Service (YAS) relate to:
+The emergence of severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) in China in late 2019, and subsequent global spread has resulted in a pandemic of coronavirus disease (COVID-19). The protection of healthcare staff who are at higher risk due to underlying health issues, has led to the introduction of measures designed to prevent transmission such as reduced face-to-face interactions. This has changed the way that healthcare is delivered across the world, with many health care providers introducing remote patient consultations by telephone and video [GREENHALGH]. 
+
+
+
+
+
+
+
+
+The COVID-19 pandemic has brought challenges to the delivery of urgent and emergency care to the patients of Yorkshire. The key challenges for Yorkshire Ambulance Service (YAS) relate to:
 
 -	Staff deemed to be high risk were advised to self-isolate for 12 weeks, reducing the available workforce in the emergency operations centre (EOC), Integrated and Urgent Care (IUC) contact centre and as frontline ambulance crews
 -	Predicted increases in sickness and absence through COVID-19 related ill-health and close contact quarantine reducing the available workforce in the EOC and on frontline ambulances

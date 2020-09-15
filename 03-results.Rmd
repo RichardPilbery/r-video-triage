@@ -55,7 +55,8 @@ df1 <- df %>%
     ),
     tech_issue = ifelse(is.na(tech_iss) | `video call conducted?` != "yes", "No", "Yes"),
     cat = ifelse(cat == 0, NA, cat),
-    GovtStdTOC = str_sub(GovtStdTOC, 4,4)
+    GovtStdTOC = str_sub(GovtStdTOC, 4,4),
+    recontact = ifelse(recontact == 0, "no", "yes")
   ) %>%
   rename(
     `initial triage category` = cat,
@@ -66,7 +67,8 @@ df1 <- df %>%
   ) %>%
   left_join(cc_df, by=c("DespatchCodeAtCSD" = "Desp Code")) %>%
   mutate(
-    `initial triage category` = coalesce(`initial triage category`, org_cat)
+    `initial triage category` = coalesce(`initial triage category`, org_cat),
+    "Hear and treat recontact within 24 hours" = recontact
   )
 
 #df1 %>% filter(`video call conducted?` == "yes", `initial triage category` == "5") %>% count(month)
@@ -94,17 +96,21 @@ cat5_vc_df <- df1 %>%
   mutate(
     `clinician category` = 'video'
   ) %>%
-  select(`final triage category`, `call outcome`,`clinician category`, TimeCallCommenced)
+  select(`final triage category`, `call outcome`,`clinician category`, recontact, TimeCallCommenced)
 
 
 cat5_df <- readRDS('data/df-final-csd.rds') %>% 
   mutate(
     `clinician category` = 'csd',
     `final triage category` = cat,
-    `call outcome` = call_outcome
+    `call outcome` = call_outcome,
+    recontact = ifelse(recontact == 0, "no", "yes")
   ) %>%
-  select(`final triage category`, `call outcome`,`clinician category`, TimeCallCommenced) %>%
-  bind_rows(cat5_vc_df)
+  select(`final triage category`, `call outcome`,`clinician category`, recontact, TimeCallCommenced) %>%
+  bind_rows(cat5_vc_df) %>%
+  mutate(
+    "Hear and treat recontact within 24 hours" = recontact
+  )
   
   
 cat5_table <- CreateTableOne(
@@ -128,7 +134,8 @@ cat5_df2 <- cat5_df %>%
   summarise(
     n = n(),
     prop_ht = sum(`call outcome` == "Hear and treat")/n,
-    prop_c5 = sum(`final triage category` == "5")/n
+    prop_c5 = sum(`final triage category` == "5")/n,
+    prop_recontact = sum(`call outcome` == "Hear and treat" & recontact == "yes")/sum(`call outcome` == "Hear and treat")
   )
 
 
@@ -306,7 +313,21 @@ The majority of calls selected for video triage by clinicians were intially tria
 
 ```
 
-An analysis of catgory 5 calls managed by the clinical support desk show that a higher proportion of calls that were intially triaged as category 5 remained so when a video triage was conducted. Similarly, a high proportion of calls had an outcome of 'hear and treat' compared to traditional telephone-only triage (Table \@ref(tab:cat-table) and Figure \@ref(fig:csd-vs-vc)).
+
+```{r}
+
+# Quick maths to calculate proportion of recontacts for 
+# cat 5
+# H&T
+
+r24 <- cat5_df %>% filter(`call outcome` == "Hear and treat") %>% count(`clinician category`) %>% rename(cc = `clinician category`)
+r24a <- cat5_df %>% filter(`call outcome` == "Hear and treat") %>% count(`clinician category`, recontact) %>% rename(cc = `clinician category`)
+
+
+
+```
+
+An analysis of catgory 5 calls show that a higher proportion of calls that were intially triaged as category 5 remained so when a video triage was conducted compared to traditional telephone triage conducted by the clinical support desk. Similarly, a higher proportion of calls had an outcome of 'hear and treat' when video triage was utilised (Table \@ref(tab:cat-table) and Figure \@ref(fig:csd-vs-vc)). Recontact rates for the subset of calls with a 'hear and treat' outcome were `r r24a$n[r24a$cc == "csd" & r24a$recontact == "yes"]`/`r r24$n[r24$cc == "csd"]` (`r round((r24a$n[r24a$cc == "csd" & r24a$recontact == "yes"]/ r24$n[r24$cc == "csd"])*100,1)`%) for clinical support desk calls and `r r24a$n[r24a$cc == "video" & r24a$recontact == "yes"]`/`r r24$n[r24$cc == "video"]` (`r round((r24a$n[r24a$cc == "video" & r24a$recontact == "yes"]/ r24$n[r24$cc == "video"])*100,1)`%) for the video calls.
 
 ```{r cat-table}
 
@@ -320,13 +341,17 @@ kableone(print(cat5_table, showAllLevels = T), caption = "Comparison of category
 ```{r csd-vs-vc, fig.cap="Comparison of clinical support desk and video triage category 5 calls"}
 
   cat5_df2 %>%
-  pivot_longer(cols = c(prop_ht, prop_c5), names_to = "variable", values_to = "proportion") %>%
+  pivot_longer(cols = c(prop_ht, prop_c5, prop_recontact), names_to = "variable", values_to = "proportion") %>%
   mutate(
-    variable = ifelse(variable == "prop_ht", "Proportion of hear and treat call outcome", "Proportion of calls with a final triage category of 5")
+    variable = case_when(
+      variable == "prop_ht"~  "Proportion of hear and treat call outcome", 
+      variable == "prop_c5" ~ "Proportion of calls with a final triage category of 5",
+      TRUE ~ "Proportion of hear and treat calls\nwith a recontact within 24 hours")
   ) %>%
   ggplot(aes(x = themonth, y = proportion, fill = `clinician category`)) +
   geom_bar(stat = "identity", position="dodge") +
   scale_fill_manual(values = c("#440154ff", "#238A8DFF")) + 
+  #scale_fill_viridis_d() +
   scale_y_continuous(name = "Proportion of calls", labels = scales::percent, breaks = seq(0,1,0.1)) +
   theme_minimal() +
   # 'pairlist' object cannot be coerced to type 'integer'
