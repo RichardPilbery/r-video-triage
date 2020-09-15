@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: article
 output: bookdown::word_document2
-bibliography: [references.bib, packages.bib]
+bibliography: [video-triage-se-refs.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: RichardPilbery/generic-bookdown
@@ -22,7 +22,7 @@ header-includes:
 
 ```
 `r if (!knitr:::is_html_output()) '
-# The title goes here
+# The utility of video triage for patients and clinicians during the covid-19 pandemic: a service evaluation
 '`
 `r if (knitr:::is_html_output()) '
 # Preamble

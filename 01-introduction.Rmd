@@ -1,25 +1,13 @@
 # Introduction {-}
 
 
-The emergence of severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) in China in late 2019, and subsequent global spread has resulted in a pandemic of coronavirus disease (COVID-19). The protection of healthcare staff who are at higher risk due to underlying health issues, has led to the introduction of measures designed to prevent transmission such as reduced face-to-face interactions. This has changed the way that healthcare is delivered across the world, with many health care providers introducing remote patient consultations by telephone and video [GREENHALGH]. 
+The emergence of severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) in China in late 2019, and subsequent global spread has resulted in a pandemic of coronavirus disease (COVID-19). The protection of healthcare staff who are at higher risk due to underlying health issues, has led to the introduction of measures designed to prevent transmission such as reduced face-to-face interactions. This has changed the way that healthcare is delivered across the world, with many health care providers introducing remote patient consultations by telephone and video [@greenhalgh_video_2020]. 
 
+Prior to the pandemic, ambulance services managed around 6% of their 999 calls with telephone advice only, known as a ‘hear and treat’ response [@nhs_england_ambulance_2020]. In order to continue to ensure patient safety was maintained, and to mitigate the impacts of the pandemic on the urgent and emergency care services during the pandemic, Yorkshire Ambulance Service NHS Trust (YAS) began to pilot video consultations for 999 calls managed by the clinical hub within the emergency operations centre (EOC). 
 
+Previous research has focussed on the use of video consultations for routine outpatient appointments for chronic conditions and there is an absence of evidence of the effectiveness and satisfaction for patients and staff using this technology in an undifferentiated urgent or emergency case load [@greenhalgh_real-world_2018]. Recent evidence from the United States indicates that telemedicine in urgent hospital presentations provides increased capacity in the healthcare system by reducing face-to-face consultations [@mann_covid-19_2020]. However, it is important to consider the impact of this method of patient assessment and management with respect to the safety of decision making in the pre-hospital setting, patient preference and staff perceptions of the technology [@ohara_qualitative_2015].
 
-
-
-
-
-
-The COVID-19 pandemic has brought challenges to the delivery of urgent and emergency care to the patients of Yorkshire. The key challenges for Yorkshire Ambulance Service (YAS) relate to:
-
--	Staff deemed to be high risk were advised to self-isolate for 12 weeks, reducing the available workforce in the emergency operations centre (EOC), Integrated and Urgent Care (IUC) contact centre and as frontline ambulance crews
--	Predicted increases in sickness and absence through COVID-19 related ill-health and close contact quarantine reducing the available workforce in the EOC and on frontline ambulances
--	Increased demand on 111 and 999 services due to COVID-19 morbidity.
--	Supporting patients to access the most appropriate services first time at a time of high demand across the system.
-
-In order to continue to provide a high quality service, a number of mitigating actions have been undertaken, including the development of a video triage system for both 111 and 999 calls. In the EOC, which handles the 999 calls, members of the Senior Clinical Support Cell (HCPC-registered paramedic or NMC-registered nurse at minimum), as well as paramedics who are working from home due to shielding, are able to identify calls from the stack of calls awaiting allocation of a response which they determine may benefit from video triage. The patient is then called by telephone for initial triage and if found to be suitable, they are asked if they are willing and able to engage with the video technology (GoodSAM or ACCuRX) and a video consultation can be set up. If the patient does not have the capability or does not consent to video consultation, a regular telephone-only triage is completed by the clinician. 
-
-We aimed to understand the acceptability and experiences of staff and patients using video triage for urgent and emergency care patients in one UK NHS Ambulance Trust.  
+We aimed to understand the impact of video triage by investigating patient and staff acceptability and the safety of the decision-making process.
 
 
 ## Objectives
@@ -31,6 +19,6 @@ Our specific objectives were:
 3.	To understand the outcomes of patients who are offered video triage as determined by:
     a.	The number of patients who are offered a video consultation but refuse or do not have the technical capability
     b.	The proportion of 999 calls that are closed as ‘hear and treat’ with and without video triage
-    c.	A comparison of 999 24 hour re-contact rates for video and non-video triaged calls that are closed with ‘hear and treat’ advice
+    c.	A comparison of 999 24-hour re-contact rates for video and non-video triaged calls that are closed with ‘hear and treat’ advice
 
 

@@ -1,5 +1,5 @@
 # Conclusion {-}
-The conclusion
+In this single NHS Ambulance Trust evaluation, the use of video triage for low acuity calls appeared to be safe, with low rates of recontact and high levels of patient and clinician satisfaction compared to standard telephone triage. However, video triage is not always appropriate or acceptable to patients, or possible due to technical issues.
 
 
 ## Acknoledgements {-}
@@ -15,10 +15,10 @@ All authors drafted the manuscript and contributed substantially to its revision
 
 ## Funding {-}
 
-??
+Not externally funded
 
 ## Data sharing statement {-}
 
-???
+The data for this evaluation is available on reasonable request.
 
 

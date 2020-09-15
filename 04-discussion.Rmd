@@ -1,10 +1,24 @@
 # Discussion {-}
-Discussion blurb
+The introduction of new services and technology quickly, and at scale, can be challenging. In the context of COVID-19, many changes to healthcare delivery have occurred. In order to understand the impact of these changes and to support sustained change where it is warranted [@greenhalgh_video_2020], this evaluation was undertaken in collaboration with the YAS project delivery and research teams. This evaluation planned to understand patient and staff experiences of video triage and consultation for 999 calls using individual call-by-call feedback and call data.  
 
+The measures of patient and staff satisfaction were developed specifically for this evaluation due to an absence of specific measures for this care setting [@turner_j_developing_2019]. The 38 patient respondents to the postal survey felt supported and satisfied with the video technology, agreeing that it was mostly appropriate for their call with comments from patients agreeing with the responses to professionalism and helpfulness of the staff. With regards to holistic care, most patients agreed that video was superior or similar to telephone alone, although some reported difficulty in getting the video to work. However, clinicians' responses to questions related to patient accessibility, patient satisfaction and holistic care were less positive with roughly even distributions of agreement and disagreement with the statements. In contrast to this, in 82% of calls clinicians agreed that the patient had confidence in their care plan.   
 
-## Limitations
+A total of 432 calls identified for video triage did not complete a call, and clinicians expressed concern with respect to the accessibility of the technology for patients. In addition, from Figure 2 it can be seen that calls failing due to technical failure fluctuated as the pilot progressed. The majority of calls were made using GoodSAM, with problems using accuRx on android operating systems cited as a barrier to its continued use beyond June.  
 
-Service evaluation, no matched cases / not an RCT
-Relying on clinicians to document cases particularly failures
-Issue with identifying patients who recall 999
+During the COVID-19 pandemic there has been a societal shift in the use of technology to support connectivity, with Mann et al @mann_covid-19_2020 reporting highest telemedicine usage in hospital patients aged 20-44, whereas for this cohort there was an even split between adults over and under the age of 65 years. The difference in age demographic may be related to the patient types included in each dataset, in particular that the majority of YAS cases were category 5 calls which disproportionally include older falls patients (35% of calls were triaged as ‘fall’).
 
+Of the 641 completed video consultations, 489 were initially triaged as the lowest acuity, category 5. When compared to all category 5 calls in the same period which were processed by the clinical support desk ie without video support, the rates of resulting call outcomes were similar, video triage did have a higher rate of hear and treat 43.4% compared to 37.1%. However, the generalisibility of this result is limited by the small number of video calls included, and an unmatched data set for comparison. Video triage calls also had a lower rate of recontact than telephone triage (7.5% vs 17.5%) for ‘hear and treat’, perhaps suggesting that the use of video to supplement clinicians' decision making may be safer.
+
+However, video triage and consultation in urgent and emergency care is not a universal panacea, with 23.2% of calls selected for video consultation either judged not appropriate by the clinician or refused by the patient. Despite this, we did find high levels of patient satisfaction and confidence in the clinical plan among survey respondents, suggesting that video triage is acceptable to staff and patients, providing technical issues can be reduced.  
+
+Further work is required to understand how video triage can support Integrated and Urgent Care as limited data meant that any video consultations undertaken following a call to NHS 111 were not included in this evaluation.   
+
+## Limitations 
+
+This project is a real-world evaluation and carried out in a single NHS Ambulance Trust. The data sample was selected based on clinician perception of calls that were considered appropriate for video consultation and these were not matched to other calls such as ‘hear and treat’. Data collection was manual by participating clinicians and may mean that some successful and unsuccessful video cases were not included in this analysis. Indeed this is likely as XXXX (DEAN TO COMMENT PLEASE) calls were recorded in activity reports provided by GoodSAM.  
+
+Previous models have used the definition of patients attending ED or being admitted to hospital within 3 days of contact as being an incorrect ‘hear and treat’ or ‘see and treat’ response [@turner_j_developing_2019]. We took a pragmatic decision to limit re-call to 24-hours since the difference between telephone and video triage in terms of re-contact was not anticipated to be significant and meant the data provided sooner. Concerns for the completeness of the recontact data, due to poor recording of patient demographics required for matching callers, do reduce its reliability and similar concerns highlighted in the PHEOBE study [@turner_j_developing_2019]. 
+
+Due to the speed of the implementation of video consultations and need for early evaluation, there was insufficient time to determine the economic benefit of video triage. However, work is ongoing to provide an accurate summary of the costs associated with introducing video triage.
+
+The patient and clinician satisfaction measures are unvalidated and therefore may not be the most appropriate measures for this work, but provide a starting point for evaluating the delivery of patient-centered care.  

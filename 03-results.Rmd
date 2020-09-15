@@ -23,7 +23,7 @@ library(yardstick)
 ampds_df <- data.frame(
   code = c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"),
   code_num = seq(1, 37, 1),
-  code_text = c("Abdominal pain/problems", "Allergies", "Animal bites/attacks", "Assault", "Back pain", "Breathing problems", "Burns", "Carbon monoxide/Inhalation/HAZMAT/CBRN", "Cardiac or respiratory arrest/death", "Chest pain", "Choking", "Covulsions/fitting", "Diabetic problems", "Drowning", "Electrocution", "Eye problems", "Falls", "Headache", "Heart problems", "Heat/cold exposure", "Haemorrhage/lacerations", "Inaccessible incident", "Overdose/poisoning", "Pregnancy/Childbirth/Miscarriage", "Psychiatric", "Sick person", "Stab/gunshot/penetrating trauma", "Stroke/TIA", "Traffic incident", "Traumatic injuries", "Unconscious", "Unknown problem", "Transfer", "ACN", "Health Care Professional Admission", "Pandemic", "Interfacility"),
+  code_text = c("Abdominal pain/problems", "Allergies", "Animal bites/attacks", "Assault", "Back pain", "Breathing problems", "Burns", "Carbon monoxide/Inhalation/HAZMAT/CBRN", "Cardiac or respiratory arrest/death", "Chest pain", "Choking", "Convulsions/fitting", "Diabetic problems", "Drowning", "Electrocution", "Eye problems", "Falls", "Headache", "Heart problems", "Heat/cold exposure", "Haemorrhage/lacerations", "Inaccessible incident", "Overdose/poisoning", "Pregnancy/Childbirth/Miscarriage", "Psychiatric", "Sick person", "Stab/gunshot/penetrating trauma", "Stroke/TIA", "Traffic incident", "Traumatic injuries", "Unconscious", "Unknown problem", "Transfer", "ACN", "Health Care Professional Admission", "Pandemic", "Inter-facility"),
   stringsAsFactors = F
 )
 
@@ -56,19 +56,28 @@ df1 <- df %>%
     tech_issue = ifelse(is.na(tech_iss) | `video call conducted?` != "yes", "No", "Yes"),
     cat = ifelse(cat == 0, NA, cat),
     GovtStdTOC = str_sub(GovtStdTOC, 4,4),
-    recontact = ifelse(recontact == 0, "no", "yes")
+    recontact = ifelse(recontact == 0, "no", "yes"),
+    ageBin = case_when(
+      age < 5 ~ "<5 years",
+      age >= 5 & age < 13 ~ "5-12 years",
+      age > 12 & age < 18 ~ "13-17 years",
+      age > 17 & age < 65 ~ "18-64 years",
+      age > 64 ~ "65+ years",
+      TRUE ~ NA_character_
+    )
   ) %>%
   rename(
     `initial triage category` = cat,
     `final triage category` = GovtStdTOC,
     `technical issue during call?` = tech_issue,
     `AMPDS chief complaint` = ampds_top,
-    `call outcome` = call_outcome
+    `call outcome` = call_outcome,
+    `age range` = ageBin
   ) %>%
   left_join(cc_df, by=c("DespatchCodeAtCSD" = "Desp Code")) %>%
   mutate(
     `initial triage category` = coalesce(`initial triage category`, org_cat),
-    "Hear and treat recontact within 24 hours" = recontact
+    "Hear and treat re-contact within 24 hours" = recontact
   )
 
 #df1 %>% filter(`video call conducted?` == "yes", `initial triage category` == "5") %>% count(month)
@@ -77,12 +86,22 @@ df1 %>%
   select(video, `call outcome`, `initial triage category`, `final triage category`, `AMPDS chief complaint`, `video call conducted?`, `technical issue during call?`) %>% saveRDS('data/sankey_df.rds')
 
 
+# summary_table <- CreateTableOne(
+#   vars = c("month", "CBU","initial triage category", "final triage category", "age range", "sex", "video call conducted?", "technical issue during call?", "AMPDS chief complaint", "call outcome"),
+#   strata = "video",
+#   data = df1, 
+#   test = F,
+#   factorVars = c("CBU", "technical issue during call?", "initial triage category", "final triage category", "AMPDS chief complaint", "sex", "month", "video call conducted?", "call outcome", "age range"),
+#   addOverall = T,
+#   includeNA = T
+# )
+
 summary_table <- CreateTableOne(
-  vars = c("month", "CBU","initial triage category", "final triage category", "age", "sex", "video call conducted?", "technical issue during call?", "AMPDS chief complaint", "call outcome"),
-  strata = "video",
-  data = df1, 
+  vars = c("month", "CBU", "video", "final triage category", "age range", "sex", "video call conducted?", "technical issue during call?", "AMPDS chief complaint", "call outcome"),
+  strata = "initial triage category",
+  data = df1 %>% mutate(`initial triage category` = ifelse(is.na(`initial triage category`), "Unk", `initial triage category`)), 
   test = F,
-  factorVars = c("CBU", "technical issue during call?", "initial triage category", "final triage category", "AMPDS chief complaint", "sex", "month", "video call conducted?", "call outcome"),
+  factorVars = c("CBU", "technical issue during call?",  "final triage category", "AMPDS chief complaint", "sex", "month", "video call conducted?", "call outcome", "age range", "video"),
   addOverall = T,
   includeNA = T
 )
@@ -109,7 +128,8 @@ cat5_df <- readRDS('data/df-final-csd.rds') %>%
   select(`final triage category`, `call outcome`,`clinician category`, recontact, TimeCallCommenced) %>%
   bind_rows(cat5_vc_df) %>%
   mutate(
-    "Hear and treat recontact within 24 hours" = recontact
+    "Hear and treat re-contact within 24 hours" = recontact,
+    `clinician category` = ifelse(`clinician category` == "csd", "Clinical support desk (telephone)", "Video consultation")
   )
   
   
@@ -151,17 +171,13 @@ createPlot <- function(dataframe,thelegend=FALSE, wrapwidth=40) {
   
   dataframe = as.data.frame(dataframe)
   
-  leg = c(1000,1000)
-  if(thelegend == TRUE) {
-    leg = "bottom"
-  }
-  plot <- plot(likert(dataframe), type="bar", wrap=wrapwidth, include.center=T, plot.percents=F,plot.percent.low=T, plot.percent.high=T, plot.percent.neutral=T, legend.position=leg, colors=c('#CC0016','#F6A57F','#DFDFDF','#90C5DF','#0070B2')) 
+  plot <- plot(likert(dataframe), type="bar", wrap=wrapwidth, include.center=T, plot.percents=F,plot.percent.low=T, plot.percent.high=T, plot.percent.neutral=T, legend.position="bottom", colors=c('#CC0016','#F6A57F','#DFDFDF','#90C5DF','#0070B2')) 
   return(plot)
 }
 
 responses <- tolower(c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))
  
- qns <- c("It was easy to get the video call to work", "My reason for calling was appropriate to be assess by video call", "The clinician I spoke with on the video call had a professional manner", "The clinician I spoke with supported me to use the video call technology", "Compared to telephone alone, the video call allowed me to express all my needs in a better way", "I was happy with the plan agreeed at the end of the video call", "Overall, I was satisfied with the video call")
+ qns <- c("It was easy to get the video call to work", "My reason for calling was appropriate to be assess by video call", "The clinician I spoke with on the video call had a professional manner", "The clinician I spoke with supported me to use the video call technology", "Compared to telephone alone, the video call allowed me to express all my needs in a better way", "I was happy with the plan agreed at the end of the video call", "Overall, I was satisfied with the video call")
 
 pt_df <- read_xlsx('data/Video-Triage-Patient-Responses.xlsx') %>%
   select(q1:q7) %>%
@@ -204,7 +220,7 @@ pt_summary_df$question = qns
  
 ```
 
-Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.`r nrow(pt_df)`/201 (`r round((nrow(pt_df)/201)*100,1)`%) were returned prior to the evaluation closing (Figure \@ref(fig:pt-likert-plot), Supplementary 3). In addition to the specific likert questions, there was an opportunity for respondents to enter a free-text comment, which was utilised in `r q8_respond$resp`/`r q8_respond$n` (`r prop_respond`%) of cases. The majority of comments praised the clinicians involved in their care, both over the phone and in person:
+Between 11th June 2020 and 13th August 2020, 201 postal surveys were sent to patients who were the recipient of a video triage call.`r nrow(pt_df)`/201 (`r round((nrow(pt_df)/201)*100,1)`%) were returned prior to the evaluation closing (Figure \@ref(fig:pt-likert-plot), Supplementary 3). In addition to the specific Likert questions, there was an opportunity for respondents to enter a free-text comment, which was utilised in `r q8_respond$resp`/`r q8_respond$n` (`r prop_respond`%) of cases. The majority of comments praised the clinicians involved in their care, both over the phone and in person:
 
 >"The lady I spoke to was extremely helpful and professional. I really appreciate the help she gave me regarding my six year old son. Many thanks. Second to none service."
 
@@ -220,7 +236,7 @@ However, four respondents highlighted technical issues with the video triage ser
 
 >"Only issue was connection / signal, very hard to hear clearly. The staff were faultless." 
 
->"The video kep freezing and the sound was very bad so the call did not achieve anything. So was not a satisafctory outcome."
+>"The video kept freezing and the sound was very bad so the call did not achieve anything. So was not a satisfactory outcome."
 
 
  
@@ -236,7 +252,7 @@ Between `r format(min(df1$TimeCallCommenced), "%d %B %Y")` and `r format(max(df1
 
 ```{r }
 
-kableone(print(summary_table, showAllLevels = T), caption = "Triage calls undertaken by clinicians")
+kableone(print(summary_table, showAllLevels = T), caption = "Triage calls undertaken by clinicians stratified by intial triage category")
 
 ```
 
@@ -253,7 +269,7 @@ df1 %>%
   scale_fill_viridis_d(option = "D") + 
   scale_x_date(name = "Week Commencing", date_breaks = "1 week", expand = c(0,0)) +
   scale_y_continuous(name = "Number of calls", breaks = seq(0, 150, 10), labels = seq(0, 150, 10), expand = c(0,0)) +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10), axis.title.x = element_text(vjust = -2), plot.margin = unit(c(1,1,1,1), "cm"))
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10), axis.title.x = element_text(vjust = -2), plot.margin = unit(c(1,1,1,1), "cm"), legend.position = "bottom")
 
 ```
 
@@ -305,7 +321,7 @@ createPlot(df_likert)
 
 ```
 
-The majority of calls selected for video triage by clinicians were intially triage as category 5. However, as Figure \@ref(fig:sankey) shows, over half of calls were categorised to a higher priority by the clinician after the video consultation.
+The majority of calls selected for video triage by clinicians were initially triaged as category 5. However, as Figure \@ref(fig:sankey) shows, over half of calls were categorised to a higher priority by the clinician after the video consultation.
 
 ```{r sankey, fig.cap="Relationship of initial and final triage category and call outcome for successful video triage calls (Note: 51 cases did not have an initial triage category reported and have been removed)"}
 
@@ -327,7 +343,8 @@ r24a <- cat5_df %>% filter(`call outcome` == "Hear and treat") %>% count(`clinic
 
 ```
 
-An analysis of catgory 5 calls show that a higher proportion of calls that were intially triaged as category 5 remained so when a video triage was conducted compared to traditional telephone triage conducted by the clinical support desk. Similarly, a higher proportion of calls had an outcome of 'hear and treat' when video triage was utilised (Table \@ref(tab:cat-table) and Figure \@ref(fig:csd-vs-vc)). Recontact rates for the subset of calls with a 'hear and treat' outcome were `r r24a$n[r24a$cc == "csd" & r24a$recontact == "yes"]`/`r r24$n[r24$cc == "csd"]` (`r round((r24a$n[r24a$cc == "csd" & r24a$recontact == "yes"]/ r24$n[r24$cc == "csd"])*100,1)`%) for clinical support desk calls and `r r24a$n[r24a$cc == "video" & r24a$recontact == "yes"]`/`r r24$n[r24$cc == "video"]` (`r round((r24a$n[r24a$cc == "video" & r24a$recontact == "yes"]/ r24$n[r24$cc == "video"])*100,1)`%) for the video calls.
+
+An analysis of category 5 calls shows that a higher proportion of calls that were initially triaged as category 5 remained so when a video triage was conducted compared to traditional telephone triage conducted by the clinical support desk. Similarly, a higher proportion of calls had an outcome of ‘hear and treat’ when video triage was utilised (Table \@ref(tab:cat-table) and Figure \@ref(fig:csd-vs-vc)). Re-contact rates for the subset of calls with a 'hear and treat' outcome were `r r24a$n[r24a$cc == "csd" & r24a$recontact == "yes"]`/`r r24$n[r24$cc == "csd"]` (`r round((r24a$n[r24a$cc == "csd" & r24a$recontact == "yes"]/ r24$n[r24$cc == "csd"])*100,1)`%) for clinical support desk calls and `r r24a$n[r24a$cc == "video" & r24a$recontact == "yes"]`/`r r24$n[r24$cc == "video"]` (`r round((r24a$n[r24a$cc == "video" & r24a$recontact == "yes"]/ r24$n[r24$cc == "video"])*100,1)`%) for the video calls.
 
 ```{r cat-table}
 
@@ -344,16 +361,18 @@ kableone(print(cat5_table, showAllLevels = T), caption = "Comparison of category
   pivot_longer(cols = c(prop_ht, prop_c5, prop_recontact), names_to = "variable", values_to = "proportion") %>%
   mutate(
     variable = case_when(
-      variable == "prop_ht"~  "Proportion of hear and treat call outcome", 
-      variable == "prop_c5" ~ "Proportion of calls with a final triage category of 5",
-      TRUE ~ "Proportion of hear and treat calls\nwith a recontact within 24 hours")
+      variable == "prop_ht"~  "Proportion of hear and treat\ncall outcome", 
+      variable == "prop_c5" ~ "Proportion of calls with a\nfinal triage category of 5",
+      TRUE ~ "Proportion of hear and treat calls\nwith a re-contact within 24 hours")
   ) %>%
   ggplot(aes(x = themonth, y = proportion, fill = `clinician category`)) +
   geom_bar(stat = "identity", position="dodge") +
   scale_fill_manual(values = c("#440154ff", "#238A8DFF")) + 
+  xlab("Month") +
   #scale_fill_viridis_d() +
   scale_y_continuous(name = "Proportion of calls", labels = scales::percent, breaks = seq(0,1,0.1)) +
   theme_minimal() +
+  theme(legend.position = "bottom") +
   # 'pairlist' object cannot be coerced to type 'integer'
   # Don't put a pipe put a +!!!!
   facet_wrap(~variable)
